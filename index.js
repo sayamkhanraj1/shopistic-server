@@ -31,7 +31,7 @@ async function run() {
                 res.json(result);
                 });
 
-                  /* //---------------------Authentication-----------------------//
+                  /* /* //---------------------Authentication-----------------------//
 
 
                       //getting users info to differnciate admin and user
@@ -76,7 +76,7 @@ async function run() {
                         res.json(result);
                     }) */
 
-
+ 
          }
          finally{
                   // await client.close(); 
