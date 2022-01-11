@@ -22,7 +22,7 @@ async function run() {
                   const database = client.db('shopistic');
                   const productsCollection = database.collection('products');
                   const usersCollection = database.collection('users');
-                  const ordersInfoCollection = database.collection('orders');
+                  const ordersInfoCollection = database.collection('ordersInfo');
                   const reviewsCollection = database.collection('reviews');
 
                   // get all products
@@ -106,6 +106,17 @@ async function run() {
                   const result = await usersCollection.updateOne(filter, updateDoc);
                   res.json(result);
                 });
+
+                 app.get('/reviews', async(req, res) =>{
+                  const result = await reviewCollection.find({}).toArray();
+                  res.json(result);
+                  });
+                  // add review on data base
+                  app.post('/reviews', async(req, res)=>{
+                    const review = req.body;
+                    const result = await reviewCollection.insertOne(review);
+                    res.json(result);
+                  });
 
                   /* /* //---------------------Authentication-----------------------//
 
