@@ -22,7 +22,7 @@ async function run() {
                   const database = client.db('shopistic');
                   const productsCollection = database.collection('products');
                   const usersCollection = database.collection('users');
-                  const ordersCollection = database.collection('orders');
+                  const ordersInfoCollection = database.collection('orders');
                   const reviewsCollection = database.collection('reviews');
 
                   // get all products
@@ -30,15 +30,20 @@ async function run() {
                 const result = await productsCollection.find({}).toArray();
                 res.json(result);
                 });
+                //Add a new service
+                app.post('/addProduct', async(req, res) =>{
+                const addPackage = await productsCollection.insertOne(req.body);
+                res.send(addPackage);
+                });
 
                 //save user to the database
-              app.post('/users', async(req, res)=>{
+                app.post('/users', async(req, res)=>{
                 const user = req.body;
                 const result = await usersCollection.insertOne(user);
                 res.json(result);
-              });
-              //verify admin
-              app.get('/users/:email', async(req, res)=>{
+                });
+                //verify admin
+                app.get('/users/:email', async(req, res)=>{
                 const email = req.params.email;
                 const query = {email: email};
                 const user = await usersCollection.findOne(query);
@@ -48,6 +53,40 @@ async function run() {
                 }
                 res.json({admin: isAdmin});
               })
+
+              //Add orders info
+              app.post('/ordersInfo', async(req, res) =>{
+                const ordersInfo = await ordersInfoCollection.insertOne(req.body);
+                res.json(ordersInfo);
+                });
+                //get my orders
+                app.get('/ordersInfo/:email', async(req, res) =>{
+                const result = await ordersInfoCollection.find({email: req.params.email}).toArray();
+                res.json(result);
+                })
+                //get all user
+                app.get("/ordersInfo", async (req, res) => {
+                const result = await ordersInfoCollection.find({}).toArray();
+                res.json(result);
+                });
+                // delete myOder
+                app.delete('/ordersInfo/:id', async (req,res) => {
+                const id = req.params.id;
+                const query = {_id: ObjectId(id)};
+                const result = await ordersInfoCollection.deleteOne(query);
+                res.json(result);
+                });
+                //update status
+                app.put("/ordersInfo/:id", async (req, res)=>{
+                const id = req.params.id;
+                const query = {_id: ObjectId(id)};
+                const option = {upsert: true};
+                const updateDoc = {$set:{
+                status: "Approved"
+                }}
+                const result = await ordersInfoCollection.updateOne(query, updateDoc, option)
+                res.json(result);
+                });
               // upset users
               app.put('/users', async (req, res) => {
                 const user = req.body;
