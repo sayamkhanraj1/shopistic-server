@@ -17,13 +17,13 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
          try{
-                  await client.connect();
+                await client.connect();
 
-                  const database = client.db('shopistic');
-                  const productsCollection = database.collection('products');
-                  const usersCollection = database.collection('users');
-                  const ordersInfoCollection = database.collection('ordersInfo');
-                  const reviewsCollection = database.collection('reviews');
+                const database = client.db('shopistic');
+                const productsCollection = database.collection('products');
+                const usersCollection = database.collection('users');
+                const ordersInfoCollection = database.collection('ordersInfo');
+                const reviewsCollection = database.collection('reviews');
 
                   // get all products
                 app.get('/products', async(req, res) =>{
@@ -97,64 +97,64 @@ async function run() {
                 res.json(result);
                 });
 
-                  // make admin
-                  app.put('/users/admin', async (req, res) => {
-                  const user = req.body;
-                  console.log(user);
-                  const filter = { email: user.email };
-                  const updateDoc = { $set: {role: 'admin'} };
-                  const result = await usersCollection.updateOne(filter, updateDoc);
-                  res.json(result);
+                // make admin
+                app.put('/users/admin', async (req, res) => {
+                const user = req.body;
+                console.log(user);
+                const filter = { email: user.email };
+                const updateDoc = { $set: {role: 'admin'} };
+                const result = await usersCollection.updateOne(filter, updateDoc);
+                res.json(result);
+                });
+
+                app.get('/reviews', async(req, res) =>{
+                const result = await reviewsCollection.find({}).toArray();
+                res.json(result);
                   });
+                // add review on data base
+                app.post('/reviews', async(req, res)=>{
+                const review = req.body;
+                const result = await reviewsCollection.insertOne(review);
+                res.json(result);
+                });
+                //Payment
 
-                  app.get('/reviews', async(req, res) =>{
-                  const result = await reviewsCollection.find({}).toArray();
-                  res.json(result);
-                    });
-                    // add review on data base
-                    app.post('/reviews', async(req, res)=>{
-                    const review = req.body;
-                    const result = await reviewsCollection.insertOne(review);
-                    res.json(result);
-                    });
-                      //Payment
+                app.get('/ordersInfo/:id', async (req, res) => {
+                const id = req.params.id;
+                const query = { _id: ObjectId(id) };
+                const result = await ordersInfoCollection.findOne(query);
+                res.json(result);
+                })
+                app.post('/ordersInfo', async (req, res) => {
+                const services = req.body;
+                const result = await ordersInfoCollection.insertOne(services);
+                res.json(result);
+                })
 
-                      app.get('/ordersInfo/:id', async (req, res) => {
-                      const id = req.params.id;
-                      const query = { _id: ObjectId(id) };
-                      const result = await ordersInfoCollection.findOne(query);
-                      res.json(result);
-                      })
-                      app.post('/ordersInfo', async (req, res) => {
-                      const services = req.body;
-                      const result = await ordersInfoCollection.insertOne(services);
-                      res.json(result);
-                      })
+              /*app.put('/ordersInfo/:id', async (req, res) => {
+                const id = req.params.id;
+                const payment = req.body;
+                const filter = { _id: ObjectId(id) };
+                const updateDoc = {
+                    $set: {
+                        payment: payment
+                    }
+                };
+                const result = await ordersInfoCollection.updateOne(filter, updateDoc);
+                res.json(result);
+                })
 
-                  /*   app.put('/ordersInfo/:id', async (req, res) => {
-                    const id = req.params.id;
-                    const payment = req.body;
-                    const filter = { _id: ObjectId(id) };
-                    const updateDoc = {
-                        $set: {
-                            payment: payment
-                        }
-                    };
-                    const result = await ordersInfoCollection.updateOne(filter, updateDoc);
-                    res.json(result);
-                    })
-
-                  app.post('/create-checkout-session', async (req, res) => {
-                  const paymentInfo = req.body;
-                  const amount = paymentInfo.price * 100;
-                  const paymentIntent = await stripe.paymentIntents.create({
-                      currency: 'usd',
-                      amount: amount,
-                      payment_method_types: ['card']
-                  });
-                  res.json({ clientSecret: paymentIntent.client_secret })
-      
-                  }) */
+                app.post('/create-checkout-session', async (req, res) => {
+                const paymentInfo = req.body;
+                const amount = paymentInfo.price * 100;
+                const paymentIntent = await stripe.paymentIntents.create({
+                    currency: 'usd',
+                    amount: amount,
+                    payment_method_types: ['card']
+                });
+                res.json({ clientSecret: paymentIntent.client_secret })
+    
+                }) */
                   
  
          }
