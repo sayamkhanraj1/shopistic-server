@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 // const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const stripe = require('stripe')('sk_test_51Jw5T5E4flQuO7rVFuy5gHjjePYJUpWyY6fnviz9ptD3hkfyXNREVg9w3tqO7atkEGJruMRwtOIiRL9pYfEFxiwR00baf99d5u');
+/* const stripe = require('stripe')('sk_test_51Jw5T5E4flQuO7rVFuy5gHjjePYJUpWyY6fnviz9ptD3hkfyXNREVg9w3tqO7atkEGJruMRwtOIiRL9pYfEFxiwR00baf99d5u'); */
 
 const port = process.env.PORT || 5000;
 const app = express()
@@ -131,7 +131,7 @@ async function run() {
                       res.json(result);
                       })
 
-                    app.put('/ordersInfo/:id', async (req, res) => {
+                  /*   app.put('/ordersInfo/:id', async (req, res) => {
                     const id = req.params.id;
                     const payment = req.body;
                     const filter = { _id: ObjectId(id) };
@@ -154,7 +154,7 @@ async function run() {
                   });
                   res.json({ clientSecret: paymentIntent.client_secret })
       
-                  })
+                  }) */
                   
  
          }
